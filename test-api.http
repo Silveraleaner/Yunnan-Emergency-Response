@@ -1,0 +1,41 @@
+### 定义环境变量
+@baseUrl = http://localhost:8080
+@contentType = application/json
+
+### 1. 用户注册
+POST {{baseUrl}}/api/auth/register
+Content-Type: {{contentType}}
+
+{
+  "username": "admin",
+  "password": "123456",
+  "realName": "系统管理员"
+}
+
+### 2. 用户登录 (并提取 Token 到全局变量)
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: {{contentType}}
+
+{
+  "username": "admin",
+  "password": "123456"
+}
+
+> {%
+    client.global.set("auth_token", response.body.data.token);
+%}
+
+### 3. 上报灾情 (携带 Token，触发 AI Mock 和 双库落库)
+POST {{baseUrl}}/api/incidents
+Content-Type: {{contentType}}
+Authorization: Bearer {{auth_token}}
+
+{
+  "title": "昆明暴雨灾害",
+  "description": "昆明市五华区遭遇强降雨，部分路段积水严重。",
+  "incidentType": "暴雨",
+  "severity": "MEDIUM",
+  "latitude": 24.8852,
+  "longitude": 102.8384
+}
