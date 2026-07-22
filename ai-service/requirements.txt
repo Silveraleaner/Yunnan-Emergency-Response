@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+langchain
+langgraph
+openai
+psycopg2-binary
+sentence-transformers
+python-dotenv
+aiohttp
+pypdf
