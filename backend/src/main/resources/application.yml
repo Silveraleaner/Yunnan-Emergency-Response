@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    mysql:
+      jdbc-url: jdbc:mysql://127.0.0.1:3306/emergency_db?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&characterEncoding=utf8
+      username: root
+      password: ZAQ12wsx581!
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    postgres:
+      jdbc-url: jdbc:postgresql://127.0.0.1:5432/spatial_ai_db
+      username: postgres
+      password: ZAQ12wsx581!
+      driver-class-name: org.postgresql.Driver
+
+  jpa:
+    mysql:
+      hibernate:
+        ddl-auto: validate
+      show-sql: false
+      properties:
+        hibernate:
+          format_sql: true
+          dialect: org.hibernate.dialect.MySQLDialect
+    postgres:
+      hibernate:
+        ddl-auto: validate
+      show-sql: false
+      properties:
+        hibernate:
+          format_sql: true
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: emergency-platform-jwt-secret-key-2024-yunnan-disaster-response
+  expiration: 86400000
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
