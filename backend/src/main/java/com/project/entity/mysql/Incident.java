@@ -15,20 +15,32 @@ public class Incident {
     @Column(name = "incident_id", unique = true, nullable = false, length = 50)
     private String incidentId;
 
+    @Column(name = "incident_name", nullable = false, length = 200)
+    private String incidentName;
+
     @Column(name = "title", nullable = false, length = 200)
     private String title;
+
+    @Column(name = "disaster_type", nullable = false, length = 50)
+    private String disasterType;
+
+    @Column(name = "incident_level", length = 10)
+    private String incidentLevel;
+
+    @Column(name = "occur_time")
+    private LocalDateTime occurTime;
+
+    @Column(name = "location", length = 200)
+    private String location;
 
     @Column(name = "description", length = 2000)
     private String description;
 
-    @Column(name = "incident_type", nullable = false, length = 50)
-    private String incidentType;
-
-    @Column(name = "severity", nullable = false, length = 20)
-    private String severity;
-
     @Column(name = "status", nullable = false, length = 20)
     private String status;
+
+    @Column(name = "image_urls", columnDefinition = "TEXT")
+    private String imageUrls;
 
     @Column(name = "reporter_id")
     private Long reporterId;
@@ -50,7 +62,7 @@ public class Incident {
         updatedAt = LocalDateTime.now();
         reportTime = LocalDateTime.now();
         if (status == null) {
-            status = "PENDING";
+            status = "pending";
         }
     }
 
@@ -75,12 +87,52 @@ public class Incident {
         this.incidentId = incidentId;
     }
 
+    public String getIncidentName() {
+        return incidentName;
+    }
+
+    public void setIncidentName(String incidentName) {
+        this.incidentName = incidentName;
+    }
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getDisasterType() {
+        return disasterType;
+    }
+
+    public void setDisasterType(String disasterType) {
+        this.disasterType = disasterType;
+    }
+
+    public String getIncidentLevel() {
+        return incidentLevel;
+    }
+
+    public void setIncidentLevel(String incidentLevel) {
+        this.incidentLevel = incidentLevel;
+    }
+
+    public LocalDateTime getOccurTime() {
+        return occurTime;
+    }
+
+    public void setOccurTime(LocalDateTime occurTime) {
+        this.occurTime = occurTime;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getDescription() {
@@ -91,28 +143,20 @@ public class Incident {
         this.description = description;
     }
 
-    public String getIncidentType() {
-        return incidentType;
-    }
-
-    public void setIncidentType(String incidentType) {
-        this.incidentType = incidentType;
-    }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(String imageUrls) {
+        this.imageUrls = imageUrls;
     }
 
     public Long getReporterId() {
