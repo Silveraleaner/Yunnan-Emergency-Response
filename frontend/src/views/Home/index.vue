@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { Refresh } from '@element-plus/icons-vue'
 import StatCard from '@/components/StatCard.vue'
 import ChartContainer from '@/components/ChartContainer.vue'
 import { getDashboardOverview, getDashboardTrend, getDashboardDistribution } from '@/api/dashboard'
@@ -8,6 +10,7 @@ import type { DashboardOverview, DashboardTrend, DashboardDistribution } from '@
 import type { EChartsOption } from 'echarts'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 const overview = ref<DashboardOverview | null>(null)
 const trendData = ref<DashboardTrend | null>(null)
@@ -98,12 +101,17 @@ function refreshAll(): void {
   loadCharts()
 }
 
-const quickEntries = [
-  { title: '灾情上报', icon: 'EditPen', path: '/incident/report', color: '#f56c6c' },
+const allQuickEntries = [
+  { title: '灾情上报', icon: 'EditPen', path: '/incident/report', color: '#f56c6c', roles: ['VIEWER'] },
   { title: '事件列表', icon: 'List', path: '/incident/list', color: '#e6a23c' },
-  { title: '资源调度', icon: 'Box', path: '/resource', color: '#67c23a' },
-  { title: 'AI方案生成', icon: 'Document', path: '/plan', color: '#409eff' },
+  { title: '资源调度', icon: 'Box', path: '/resource', color: '#67c23a', roles: ['ADMIN', 'RESOURCE_MANAGER'] },
+  { title: 'AI方案生成', icon: 'Document', path: '/plan', color: '#409eff', roles: ['ADMIN', 'OPERATOR'] },
 ]
+
+const quickEntries = computed(() => {
+  const role = authStore.roleName
+  return allQuickEntries.filter((e) => !e.roles || (role && e.roles.includes(role)))
+})
 
 onMounted(() => {
   refreshAll()
@@ -131,9 +139,9 @@ onMounted(() => {
         :loading="overviewLoading"
       />
       <StatCard
-        title="待处理事件"
-        :value="overview?.pendingCount ?? '--'"
-        icon="Bell"
+        title="已结束事件"
+        :value="overview?.completedCount ?? '--'"
+        icon="CircleCheck"
         :loading="overviewLoading"
       />
     </div>
