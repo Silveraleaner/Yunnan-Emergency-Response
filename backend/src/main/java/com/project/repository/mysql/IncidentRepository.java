@@ -16,5 +16,5 @@ public interface IncidentRepository extends JpaRepository<Incident, Long> {
 
     List<Incident> findByReporterId(Long reporterId);
 
-    List<Incident> findByIncidentType(String incidentType);
+    List<Incident> findByDisasterType(String disasterType);
 }

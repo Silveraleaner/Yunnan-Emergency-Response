@@ -26,7 +26,7 @@ Content-Type: {{contentType}}
     client.global.set("auth_token", response.body.data.token);
 %}
 
-### 3. 上报灾情 (携带 Token，触发 AI Mock 和 双库落库)
+### 3. 上报灾情 (携带 Token，触发 AI Mock 和 双库落库) - 旧接口
 POST {{baseUrl}}/api/incidents
 Content-Type: {{contentType}}
 Authorization: Bearer {{auth_token}}
@@ -39,3 +39,63 @@ Authorization: Bearer {{auth_token}}
   "latitude": 24.8852,
   "longitude": 102.8384
 }
+
+### 4. 灾情上报 (multipart/form-data) - Day 2 新接口
+POST {{baseUrl}}/api/incident/report
+Content-Type: multipart/form-data
+Authorization: Bearer {{auth_token}}
+
+--boundary
+Content-Disposition: form-data; name="incidentName"
+
+昆明暴雨灾害测试
+--boundary
+Content-Disposition: form-data; name="disasterType"
+
+flood
+--boundary
+Content-Disposition: form-data; name="incidentLevel"
+
+III
+--boundary
+Content-Disposition: form-data; name="location"
+
+昆明市五华区
+--boundary
+Content-Disposition: form-data; name="description"
+
+昆明市五华区遭遇强降雨，部分路段积水严重，已造成交通中断。
+--boundary
+Content-Disposition: form-data; name="images"; filename="test.jpg"
+Content-Type: image/jpeg
+
+<./frontend/src/assets/hero.png
+--boundary--
+
+### 5. AI方案生成 (REST 轮询版) - Day 2 新接口
+# @name generatePlan
+POST {{baseUrl}}/api/plan/generate
+Content-Type: {{contentType}}
+Authorization: Bearer {{auth_token}}
+
+{
+  "incidentId": "eca3233c-aa16-4a21-bfc7-652e79452fd4"
+}
+
+> {%
+    client.global.set("plan_id", response.body.data.planId);
+%}
+
+### 6. 获取方案详情 - Day 2 新接口
+GET {{baseUrl}}/api/plan/detail?planId={{plan_id}}
+Authorization: Bearer {{auth_token}}
+
+### 7. 获取方案列表 - Day 2 新接口
+GET {{baseUrl}}/api/plan/list?incidentId=eca3233c-aa16-4a21-bfc7-652e79452fd4
+Authorization: Bearer {{auth_token}}
+
+### 8. AI方案流式输出 (SSE 打字机版) - Day 2 核心接口
+GET {{baseUrl}}/api/plan/stream?incidentId=eca3233c-aa16-4a21-bfc7-652e79452fd4
+Authorization: Bearer {{auth_token}}
+Accept: text/event-stream
+Cache-Control: no-cache
